@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<authResponse> call, Throwable t) {
                 container.setVisibility(View.VISIBLE);
                 animationView.setVisibility(View.GONE);
-                Toast.makeText(LoginActivity.this, "Failure", Toast.LENGTH_SHORT);
+                Toast.makeText(LoginActivity.this, "Call Failure", Toast.LENGTH_SHORT);
             }
         });
     }
