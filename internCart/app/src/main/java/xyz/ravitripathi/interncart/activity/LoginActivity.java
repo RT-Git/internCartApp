@@ -1,6 +1,8 @@
 package xyz.ravitripathi.interncart.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -32,6 +34,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String defaultValue = null;
+        String uid = sharedPref.getString("uid", defaultValue);
+
+        if (uid != null || !uid.isEmpty()) {
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("uid", uid);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(i);
+        }
         bindViews();
 
     }
@@ -50,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                 password.setError(null);
 
                 InputMethodManager inputManager = (InputMethodManager)
-                        getSystemService(c.INPUT_METHOD_SERVICE);
+                        getSystemService(INPUT_METHOD_SERVICE);
 
                 inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null
                         : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -85,16 +98,22 @@ public class LoginActivity extends AppCompatActivity {
                 container.setVisibility(View.VISIBLE);
                 animationView.setVisibility(View.GONE);
 
-                if(response.isSuccessful()){
-                    Toast.makeText(LoginActivity.this, response.body().getUid(), Toast.LENGTH_SHORT).show();
-                }
-                else{
+                if (response.isSuccessful()) {
+                    try {
+                        Toast.makeText(LoginActivity.this, response.body().getUid(), Toast.LENGTH_SHORT).show();
+                        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("uid", response.body().getUid());
+                        editor.commit();
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                } else {
                     if (response.code() == 401) {
                         Toast.makeText(LoginActivity.this, "Sorry, this user does not exits", Toast.LENGTH_SHORT).show();
-                    }
-
-                    else
-                        Toast.makeText(LoginActivity.this,"response in not successful", Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(LoginActivity.this, "response in not successful", Toast.LENGTH_SHORT).show();
                 }
             }
 
