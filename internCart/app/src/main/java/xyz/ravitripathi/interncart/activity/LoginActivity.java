@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                 String pass = password.getText().toString();
                 if (user.isEmpty()) {
                     username.setError("Enter the username");
+
                     return;
                 }
 
