@@ -9,6 +9,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,16 +21,18 @@ import xyz.ravitripathi.interncart.R;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
+    private SearchView searchView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent i  = getIntent();
         String uid = i.getStringExtra("uid");
-        if(uid==null || uid.isEmpty()){
-            Toast.makeText(this,"Please Login First to continue",Toast.LENGTH_SHORT);
-            startActivity(new Intent(this,LoginActivity.class));
-        }
+//        if(uid==null || uid.isEmpty()){
+//            Toast.makeText(this,"Please Login First to continue",Toast.LENGTH_SHORT);
+//            startActivity(new Intent(this,LoginActivity.class));
+//        }
         bindViews();
 
     }
@@ -55,6 +58,20 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        searchView = findViewById(R.id.search);
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String s = searchView.getQuery().toString();
+                searchForItem(s);
+            }
+        });
+
+    }
+
+
+    private void searchForItem(String s){
 
     }
     @Override
@@ -103,14 +120,22 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_logout) {
+            logOut();
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_logout) {
 
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logOut(){
+        Intent i = new Intent(this, LoginActivity.class);
+
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(i);
     }
 }
