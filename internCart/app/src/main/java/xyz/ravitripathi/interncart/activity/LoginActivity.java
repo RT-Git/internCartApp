@@ -42,11 +42,13 @@ public class LoginActivity extends AppCompatActivity {
         String uid = sharedPref.getString("uid", defaultValue);
 
 
-//        //TODO: Remove this and implement lower
-//        Intent i = new Intent(this, MainActivity.class);
-//        i.putExtra("uid", uid);
-//        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        startActivity(i);
+  //TODO: Remove this and implement lower
+
+        Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("uid", uid);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(i);
+
 
         /*
         if (uid != null) {
@@ -56,7 +58,8 @@ public class LoginActivity extends AppCompatActivity {
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
             }
-        }*/
+        }
+        */
         bindViews();
 
     }
@@ -124,7 +127,9 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString("uid", response.body().getUid());
                         editor.commit();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        Intent i = new Intent(LoginActivity.this,MainActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(i);
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }

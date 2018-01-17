@@ -1,40 +1,33 @@
 package xyz.ravitripathi.interncart.pojo;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-
 /**
- * Created by ravi on 15/01/18.
+ * Created by ravi on 16/01/18.
  */
 
 
-public class productPOJO {
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+public class ProductPOJO {
 
     @SerializedName("productId")
     @Expose
     private String productId;
-
     @SerializedName("pName")
     @Expose
     private String pName;
-
     @SerializedName("pPrice")
     @Expose
     private double pPrice;
-
     @SerializedName("pBrand")
     @Expose
     private String pBrand;
-
     @SerializedName("pCategory")
     @Expose
     private String pCategory;
-
     @SerializedName("pimage")
     @Expose
     private String pimage;
-
     @SerializedName("pUnit")
     @Expose
     private int pUnit;

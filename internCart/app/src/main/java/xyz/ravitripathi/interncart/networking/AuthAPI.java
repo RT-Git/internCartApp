@@ -8,6 +8,8 @@ import retrofit2.http.POST;
 import xyz.ravitripathi.interncart.pojo.AuthPOJO;
 import xyz.ravitripathi.interncart.pojo.AuthResponse;
 
+import static xyz.ravitripathi.interncart.Constants.base_url;
+
 
 /**
  * Created by ravi on 15/01/18.
@@ -15,7 +17,7 @@ import xyz.ravitripathi.interncart.pojo.AuthResponse;
 
 public interface AuthAPI {
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://10.177.7.123:8080")
+            .baseUrl(base_url)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
