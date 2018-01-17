@@ -3,15 +3,19 @@ package xyz.ravitripathi.interncart.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.gson.Gson;
@@ -28,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText username, password;
     private RelativeLayout container;
-    private Button button;
+    private Button button, signup;
     private Context c = this;
     private LottieAnimationView animationView;
 
@@ -41,10 +45,14 @@ public class LoginActivity extends AppCompatActivity {
         String defaultValue = null;
         String uid = sharedPref.getString("uid", defaultValue);
 
-
+        getSupportActionBar().hide();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow(); // in Activity's onCreate() for instance
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
   //TODO: Remove this and implement lower
 
-        Intent i = new Intent(this, MainActivity.class);
+     /*  Intent i = new Intent(this, MainActivity.class);
         i.putExtra("uid", uid);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(i);
@@ -70,6 +78,13 @@ public class LoginActivity extends AppCompatActivity {
         animationView = findViewById(R.id.animation_view);
         password = findViewById(R.id.password);
         container = findViewById(R.id.container);
+        signup = findViewById(R.id.signup);
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this,SignupActivity.class));
+            }
+        });
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,10 +123,6 @@ public class LoginActivity extends AppCompatActivity {
         animationView.setVisibility(View.VISIBLE);
         final AuthAPI auth = AuthAPI.retrofit.create(AuthAPI.class);
         Call<AuthResponse> call = auth.postUser(new AuthPOJO(username, password));
-        Gson gson = new Gson();
-        String s =  gson.toJson(new AuthPOJO("2232","23232"));
-        Log.d("JSON: ",s);
-
         call.enqueue(new Callback<AuthResponse>() {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {

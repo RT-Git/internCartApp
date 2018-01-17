@@ -5,5 +5,5 @@ package xyz.ravitripathi.interncart;
  */
 
 public class Constants {
-    public static String base_url="http://10.177.7.117:8080";
+    public static String base_url="http://10.177.7.123:8080";
 }

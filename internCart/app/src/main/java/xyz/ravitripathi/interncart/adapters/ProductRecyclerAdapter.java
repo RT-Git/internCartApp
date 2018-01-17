@@ -1,6 +1,7 @@
 package xyz.ravitripathi.interncart.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,15 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.List;
-
-
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+
+import java.util.List;
+
 import xyz.ravitripathi.interncart.R;
+import xyz.ravitripathi.interncart.activity.ProductDetailActivity;
 import xyz.ravitripathi.interncart.pojo.ProductPOJO;
 
 /**
@@ -25,8 +25,8 @@ import xyz.ravitripathi.interncart.pojo.ProductPOJO;
 
 
 public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecyclerAdapter.VH> {
-    private List<ProductPOJO> prodList;
     private static Context context;
+    private List<ProductPOJO> prodList;
 
     public ProductRecyclerAdapter(Context context, List<ProductPOJO> prodList) {
         this.prodList = prodList;
@@ -42,7 +42,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
-        Log.d("Adapter","Holder called");
+        Log.d("Adapter", "Holder called");
         holder.setData(prodList.get(position));
     }
 
@@ -52,12 +52,12 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     }
 
     public static class VH extends RecyclerView.ViewHolder {
-        TextView name,price,brand,unit;
+        TextView name, price, brand, unit;
         ImageView image;
 
         public VH(View itemView) {
             super(itemView);
-            Log.d("Adapter","VH called");
+            Log.d("Adapter", "VH called");
             image = itemView.findViewById(R.id.prodImage);
             name = itemView.findViewById(R.id.name);
             price = itemView.findViewById(R.id.price);
@@ -66,7 +66,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
         }
 
         public void setData(final ProductPOJO data) {
-            Log.d("Adapter","Data set");
+            Log.d("Adapter", "Data set");
             name.setText(data.getpName());
             price.setText(String.valueOf(data.getpPrice()));
             brand.setText(data.getpBrand());
@@ -80,6 +80,15 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
                     .load(data.getPimage())
                     .apply(options)
                     .into(image);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(context, ProductDetailActivity.class);
+                    i.putExtra("id", data.getProductId());
+                    context.startActivity(i);
+                }
+            });
 
         }
 

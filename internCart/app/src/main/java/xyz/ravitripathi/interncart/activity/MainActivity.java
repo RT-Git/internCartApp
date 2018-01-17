@@ -70,26 +70,19 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        /*
-        ProductPOJO p = new ProductPOJO();
-        p.setPBrand("Test");
-        p.setPCategory("Tets");
-        p.setPName("Name");
-        p.setPBrand("bRAND");
-        p.setPPrice(232323);
-        p.setProductId("23232");
-        p.setPUnit(232);
-        p.setPimage("https://res.cloudinary.com/demo/image/upload/Sample.jpg");
-        List<ProductPOJO> list =  new ArrayList<>();
-        list.addAll(p);
-
-        productRecyclerAdapter = new ProductRecyclerAdapter(c, list);
-        recyclerView.setAdapter(productRecyclerAdapter);
-*/
-
-
         searchView = findViewById(R.id.search);
+
+
+
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                recyclerView.setAdapter(null);
+
+                return false;
+            }
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -101,8 +94,14 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
+                String s = searchView.getQuery().toString();
+
+                searchForItem(s);
+
                 return false;
             }
+
         });
 
     }
@@ -118,6 +117,8 @@ public class MainActivity extends AppCompatActivity
                     if (!response.body().isEmpty()) {
                         productRecyclerAdapter = new ProductRecyclerAdapter(MainActivity.this, response.body());
                         recyclerView.setAdapter(productRecyclerAdapter);
+                    }else{
+
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
