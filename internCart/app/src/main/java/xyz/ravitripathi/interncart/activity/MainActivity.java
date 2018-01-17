@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -37,10 +36,10 @@ public class MainActivity extends AppCompatActivity
 
 
     private RecyclerView recyclerView;
-    private List<ProductPOJO> productPOJOList;
     private SearchView searchView;
     private ProductRecyclerAdapter productRecyclerAdapter;
     private Context c;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,15 +59,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         recyclerView = findViewById(R.id.recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(c));
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        recyclerView.setLayoutManager(new GridLayoutManager(c,2));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -98,12 +89,6 @@ public class MainActivity extends AppCompatActivity
 */
 
 
-
-
-
-
-
-
         searchView = findViewById(R.id.search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -129,13 +114,14 @@ public class MainActivity extends AppCompatActivity
         call.enqueue(new Callback<List<ProductPOJO>>() {
             @Override
             public void onResponse(Call<List<ProductPOJO>> call, Response<List<ProductPOJO>> response) {
-//                Toast.makeText(MainActivity.this, response.body().get(0).getPName(), Toast.LENGTH_SHORT).show();
-
-//                productPOJOList.addAll(response.body());
-                productRecyclerAdapter = new ProductRecyclerAdapter(MainActivity.this, response.body());
-                recyclerView.setAdapter(productRecyclerAdapter);
-
-//                productRecyclerAdapter.notifyDataSetChanged();
+                try {
+                    if (!response.body().isEmpty()) {
+                        productRecyclerAdapter = new ProductRecyclerAdapter(MainActivity.this, response.body());
+                        recyclerView.setAdapter(productRecyclerAdapter);
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

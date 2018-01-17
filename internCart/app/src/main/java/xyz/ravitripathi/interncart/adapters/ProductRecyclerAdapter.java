@@ -52,7 +52,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     }
 
     public static class VH extends RecyclerView.ViewHolder {
-        TextView name,price,brand,category,unit;
+        TextView name,price,brand,unit;
         ImageView image;
 
         public VH(View itemView) {
@@ -62,7 +62,6 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
             name = itemView.findViewById(R.id.name);
             price = itemView.findViewById(R.id.price);
             brand = itemView.findViewById(R.id.brand);
-            category = itemView.findViewById(R.id.cat);
             unit = itemView.findViewById(R.id.unit);
         }
 
@@ -71,8 +70,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
             name.setText(data.getpName());
             price.setText(String.valueOf(data.getpPrice()));
             brand.setText(data.getpBrand());
-            category.setText(data.getpCategory());
-            unit.setText(String.valueOf(data.getpUnit()));
+            unit.setText("Available Units : ".concat(String.valueOf(data.getpUnit())));
 
             RequestOptions options = new RequestOptions()
                     .centerCrop()
