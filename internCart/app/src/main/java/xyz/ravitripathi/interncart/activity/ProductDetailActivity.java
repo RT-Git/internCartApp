@@ -65,7 +65,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void addToCart(String prodID, String uid) {
 
-
+        //TODO:   NEXT LINE
+        uid = "1";
         final AddToCartAPI search = AddToCartAPI.retrofit.create(AddToCartAPI.class);
         Call<CartResponePOJO> call = search.addtoCart(new CartPOJO(uid, prodID));
         call.enqueue(new Callback<CartResponePOJO>() {

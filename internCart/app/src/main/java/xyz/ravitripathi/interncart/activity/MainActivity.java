@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
@@ -43,6 +42,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent i = getIntent();
+
         c = this;
         String uid = i.getStringExtra("uid");
 //        if(uid==null || uid.isEmpty()){
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         recyclerView = findViewById(R.id.recycler);
-        recyclerView.setLayoutManager(new GridLayoutManager(c,2));
+        recyclerView.setLayoutManager(new GridLayoutManager(c, 2));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 //        searchView = findViewById(R.id.search);
-
-
 
 
 //        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity
                     if (!response.body().isEmpty()) {
                         productRecyclerAdapter = new ProductRecyclerAdapter(MainActivity.this, response.body());
                         recyclerView.setAdapter(productRecyclerAdapter);
-                    }else{
+                    } else {
 
                     }
                 } catch (NullPointerException e) {
@@ -154,7 +152,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onClose() {
                 recyclerView.setAdapter(null);
-
                 return false;
             }
         });
@@ -178,8 +175,24 @@ public class MainActivity extends AppCompatActivity
             }
 
         });
+        MenuItem menuItem = menu.findItem(R.id.search);
 
-        return true;
+        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                recyclerView.setAdapter(null);
+                return true; // Return true to collapse action view
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+
     }
 
     @Override
@@ -204,9 +217,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.cart) {
-                startActivity(new Intent(this,CartActivity.class));
+            startActivity(new Intent(this, CartActivity.class));
         } else if (id == R.id.orders) {
-            startActivity(new Intent(this,OrdersActivity.class));
+            startActivity(new Intent(this, OrdersActivity.class));
         } else if (id == R.id.nav_logout) {
             logOut();
         }

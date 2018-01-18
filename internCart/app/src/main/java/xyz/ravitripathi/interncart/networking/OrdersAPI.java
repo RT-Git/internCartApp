@@ -7,21 +7,19 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import xyz.ravitripathi.interncart.pojo.CartContentsResponse;
-import xyz.ravitripathi.interncart.pojo.ProductPOJO;
+import xyz.ravitripathi.interncart.pojo.OrderPOJO;
 
 /**
  * Created by ravi on 18/01/18.
  */
 
-public interface GetCartAPI {
+public interface OrdersAPI {
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://10.177.7.121:8080")
+            .baseUrl("http://10.177.7.115:8080")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-    @GET("/cart/getByUid/{uid}")
-    Call<CartContentsResponse> getUserCart(@Path("uid")String uid);
-
+    @GET("/order/getHistory/{uid}")
+    Call<List<OrderPOJO>> getOrders(@Path("uid")String uid);
 
 }

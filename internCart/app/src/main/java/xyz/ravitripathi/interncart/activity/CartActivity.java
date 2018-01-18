@@ -17,6 +17,7 @@ import retrofit2.Response;
 import xyz.ravitripathi.interncart.R;
 import xyz.ravitripathi.interncart.adapters.ProductRecyclerAdapter;
 import xyz.ravitripathi.interncart.networking.GetCartAPI;
+import xyz.ravitripathi.interncart.pojo.CartContentsResponse;
 import xyz.ravitripathi.interncart.pojo.ProductPOJO;
 
 public class CartActivity extends AppCompatActivity {
@@ -35,7 +36,7 @@ public class CartActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         String defaultValue = null;
         userID = sharedPref.getString("uid", defaultValue);
-        fetchCart(userID);
+        fetchCart("1");
     }
 
     private void bindViews() {
@@ -46,15 +47,17 @@ public class CartActivity extends AppCompatActivity {
 
     private void fetchCart(String uid) {
         final GetCartAPI search = GetCartAPI.retrofit.create(GetCartAPI.class);
-        Call<List<ProductPOJO>> call = search.getUserCart(uid);
-        call.enqueue(new Callback<List<ProductPOJO>>() {
+        Call<CartContentsResponse> call = search.getUserCart(uid);
+        call.enqueue(new Callback<CartContentsResponse>() {
             @Override
-            public void onResponse(Call<List<ProductPOJO>> call, Response<List<ProductPOJO>> response) {
+            public void onResponse(Call<CartContentsResponse> call, Response<CartContentsResponse> response) {
                 try {
-                    if (!response.body().isEmpty()) {
-                        productRecyclerAdapter = new ProductRecyclerAdapter(CartActivity.this, response.body());
+
+                    if (response.body()!=null) {
+                        productRecyclerAdapter = new ProductRecyclerAdapter(CartActivity.this, response.body().getProductDTOList());
                         recyclerView.setAdapter(productRecyclerAdapter);
                     } else {
+                        Toast.makeText(CartActivity.this,"Response is null", Toast.LENGTH_SHORT).show();
 
                     }
                 } catch (NullPointerException e) {
@@ -63,7 +66,7 @@ public class CartActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<ProductPOJO>> call, Throwable t) {
+            public void onFailure(Call<CartContentsResponse> call, Throwable t) {
                 Toast.makeText(CartActivity.this, "FAILED", Toast.LENGTH_SHORT).show();
                 Log.d("RESULT", "FAILED");
             }

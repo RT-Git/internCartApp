@@ -76,6 +76,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
                     .centerCrop()
                     .placeholder(R.drawable.ic_log_out);
 
+
             Glide.with(context)
                     .load(data.getPimage())
                     .apply(options)
