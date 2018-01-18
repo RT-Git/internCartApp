@@ -1,8 +1,13 @@
 package xyz.ravitripathi.interncart.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,20 +19,29 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import xyz.ravitripathi.interncart.R;
+import xyz.ravitripathi.interncart.networking.AddToCartAPI;
 import xyz.ravitripathi.interncart.networking.ItemByIdAPI;
+import xyz.ravitripathi.interncart.pojo.CartPOJO;
+import xyz.ravitripathi.interncart.pojo.CartResponePOJO;
 import xyz.ravitripathi.interncart.pojo.ProductPOJO;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
+    final AddToCartAPI auth = AddToCartAPI.retrofit.create(AddToCartAPI.class);
     TextView name, price, brand, unit;
+    Button b;
     ImageView image;
+    String prodID, uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
         Intent i = getIntent();
-        String prodID = i.getStringExtra("id");
+        prodID = i.getStringExtra("id");
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String defaultValue = null;
+        uid = sharedPref.getString("uid", defaultValue);
         bindViews();
         if (prodID != null) {
             getItemDetails(prodID);
@@ -40,8 +54,44 @@ public class ProductDetailActivity extends AppCompatActivity {
         brand = findViewById(R.id.dbrand);
         unit = findViewById(R.id.dunit);
         image = findViewById(R.id.dprodImage);
+        b = findViewById(R.id.dbuy);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addToCart(prodID, uid);
+            }
+        });
     }
 
+    private void addToCart(String prodID, String uid) {
+
+
+        final AddToCartAPI search = AddToCartAPI.retrofit.create(AddToCartAPI.class);
+        Call<CartResponePOJO> call = search.addtoCart(new CartPOJO(uid, prodID));
+        call.enqueue(new Callback<CartResponePOJO>() {
+            @Override
+            public void onResponse(Call<CartResponePOJO> call, Response<CartResponePOJO> response) {
+
+                if (response.isSuccessful()) {
+                    Toast.makeText(ProductDetailActivity.this, "Added to Cart", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(ProductDetailActivity.this,MainActivity.class));
+                } else {
+                    if (response != null)
+                        Toast.makeText(ProductDetailActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(ProductDetailActivity.this, "Null response", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<CartResponePOJO> call, Throwable t) {
+                Toast.makeText(ProductDetailActivity.this, "FAILED", Toast.LENGTH_SHORT).show();
+                Log.d("RESULT", "FAILED");
+            }
+        });
+    }
 
     private void setViews(Response<ProductPOJO> response) {
         name.setText(response.body().getpName());

@@ -17,7 +17,7 @@ import static xyz.ravitripathi.interncart.Constants.base_url;
 
 public interface ItemByIdAPI {
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(base_url)
+            .baseUrl("http://10.177.7.117:8080")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

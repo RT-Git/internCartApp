@@ -51,8 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
   //TODO: Remove this and implement lower
-
-     /*  Intent i = new Intent(this, MainActivity.class);
+        Intent i = new Intent(this, MainActivity.class);
         i.putExtra("uid", uid);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(i);
