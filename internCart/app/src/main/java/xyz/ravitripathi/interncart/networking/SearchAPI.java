@@ -9,7 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import xyz.ravitripathi.interncart.pojo.ProductPOJO;
 
-import static xyz.ravitripathi.interncart.Constants.base_url;
+import static xyz.ravitripathi.interncart.Constants.search_url;
 
 /**
  * Created by ravi on 15/01/18.
@@ -18,10 +18,11 @@ import static xyz.ravitripathi.interncart.Constants.base_url;
 public interface SearchAPI {
 
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://10.177.7.117:8080")
+            .baseUrl(search_url)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
-//
+
+    //
     @GET("/search/get/{prodname}")
-    Call<List<ProductPOJO>> search(@Path("prodname")String prodname);
+    Call<List<ProductPOJO>> search(@Path("prodname") String prodname);
 }

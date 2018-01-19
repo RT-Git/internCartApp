@@ -8,7 +8,7 @@ import retrofit2.http.POST;
 import xyz.ravitripathi.interncart.pojo.AuthPOJO;
 import xyz.ravitripathi.interncart.pojo.AuthResponse;
 
-import static xyz.ravitripathi.interncart.Constants.base_url;
+import static xyz.ravitripathi.interncart.Constants.auth_and_user;
 
 
 /**
@@ -17,7 +17,7 @@ import static xyz.ravitripathi.interncart.Constants.base_url;
 
 public interface AuthAPI {
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(base_url)
+            .baseUrl(auth_and_user)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

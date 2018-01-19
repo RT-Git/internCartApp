@@ -9,17 +9,19 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import xyz.ravitripathi.interncart.pojo.OrderPOJO;
 
+import static xyz.ravitripathi.interncart.Constants.order_url;
+
 /**
  * Created by ravi on 18/01/18.
  */
 
 public interface OrdersAPI {
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://10.177.7.115:8080")
+            .baseUrl(order_url)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-    @GET("/order/getHistory/{uid}")
+    @GET("/order/history/{uid}")
     Call<List<OrderPOJO>> getOrders(@Path("uid")String uid);
 
 }
