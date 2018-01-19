@@ -37,6 +37,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item_layout, parent, false);
         VH holder = new VH(view);
+        context= holder.itemView.getContext();
         return holder;
     }
 
@@ -75,6 +76,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
             RequestOptions options = new RequestOptions()
                     .centerCrop()
                     .placeholder(R.drawable.ic_log_out);
+
 
 
             Glide.with(context)

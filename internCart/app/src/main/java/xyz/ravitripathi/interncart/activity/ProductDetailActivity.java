@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.shashank.sony.fancygifdialoglib.FancyGifDialog;
+import com.shashank.sony.fancygifdialoglib.FancyGifDialogListener;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,8 +83,32 @@ public class ProductDetailActivity extends AppCompatActivity {
 
                         Toast.makeText(ProductDetailActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
 
-                        if (response.code() == 406)
-                            Toast.makeText(ProductDetailActivity.this, "You already have 4 items!", Toast.LENGTH_SHORT).show();
+                        if (response.code() == 406) {
+                            new FancyGifDialog.Builder(ProductDetailActivity.this)
+                                    .setTitle("Cart is Full!")
+                                    .setMessage("You've already filled 4 items in your cart")
+                                    .setNegativeBtnText("Cancel")
+                                    .setPositiveBtnBackground("#FF4081")
+                                    .setPositiveBtnText("Go back to Home")
+                                    .setNegativeBtnBackground("#FFA9A7A8")
+                                    .setGifResource(R.drawable.cartfull)   //Pass your Gif here
+                                    .isCancellable(true)
+                                    .OnPositiveClicked(new FancyGifDialogListener() {
+                                        @Override
+                                        public void OnClick() {
+                                            ProductDetailActivity.this.onBackPressed();
+                                        }
+                                    })
+                                    .OnNegativeClicked(new FancyGifDialogListener() {
+                                        @Override
+                                        public void OnClick() {
+                                            Toast.makeText(ProductDetailActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .build();
+
+                        }
+                        Toast.makeText(ProductDetailActivity.this, "You already have 4 items!", Toast.LENGTH_SHORT).show();
                     } else
                         Toast.makeText(ProductDetailActivity.this, "Null response", Toast.LENGTH_SHORT).show();
 
@@ -107,6 +133,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.ic_log_out);
+
 
         Glide.with(this)
                 .load(response.body().getPimage())
