@@ -10,9 +10,9 @@ public class CartPOJO {
     final String purchaseUnit;
 
 
-    public CartPOJO(String userId, String productId) {
+    public CartPOJO(String userId, String productId, String purchaseUnit) {
         this.userId = userId;
         this.productId = productId;
-        this.purchaseUnit = "1";
+        this.purchaseUnit = purchaseUnit;
     }
 }

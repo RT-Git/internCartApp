@@ -130,7 +130,6 @@ public class CartActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Log.e("Success", String.valueOf(response.code()));
                     try {
-                        clearCart();
                         Toast.makeText(CartActivity.this, "Checkout done", Toast.LENGTH_SHORT).show();
                         new FancyGifDialog.Builder(CartActivity.this)
                                 .setTitle("Done!")
@@ -170,26 +169,26 @@ public class CartActivity extends AppCompatActivity {
         });
     }
 
-    public void clearCart() {
-        final ClearCartAPI out = ClearCartAPI.retrofit.create(ClearCartAPI.class);
-        CartPOJO cartPOJO = new CartPOJO(cartContentsResponse.getUserId(), "");
-        Call<String> call = out.clear(cartPOJO);
-        Gson gson = new Gson();
-        String json = gson.toJson(cartPOJO);
-        Log.d("SENTJSONclear: ", json);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful())
-                    Toast.makeText(CartActivity.this, "Cart Cleared", Toast.LENGTH_LONG).show();
-//                else
-//                    Toast.makeText(CartActivity.this, response.code(), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.e("ClearAPI", "clearCart failed");
-            }
-        });
-    }
+//    public void clearCart() {
+//        final ClearCartAPI out = ClearCartAPI.retrofit.create(ClearCartAPI.class);
+//        CartPOJO cartPOJO = new CartPOJO(cartContentsResponse.getUserId(), "","");
+//        Call<String> call = out.clear(cartPOJO);
+//        Gson gson = new Gson();
+//        String json = gson.toJson(cartPOJO);
+//        Log.d("SENTJSONclear: ", json);
+//        call.enqueue(new Callback<String>() {
+//            @Override
+//            public void onResponse(Call<String> call, Response<String> response) {
+//                if (response.isSuccessful())
+//                    Toast.makeText(CartActivity.this, "Cart Cleared", Toast.LENGTH_LONG).show();
+////                else
+////                    Toast.makeText(CartActivity.this, response.code(), Toast.LENGTH_LONG).show();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<String> call, Throwable t) {
+//                Log.e("ClearAPI", "clearCart failed");
+//            }
+//        });
+//    }
 }

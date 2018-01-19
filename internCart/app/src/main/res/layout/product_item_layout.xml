@@ -7,8 +7,7 @@
     android:layout_marginEnd="5dp"
     android:layout_marginStart="5dp"
     android:clickable="true"
-    android:focusable="true"
-    android:padding="10dp">
+    android:focusable="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -64,6 +63,14 @@
             android:textAlignment="center"
             android:textColor="@color/black" />
 
+        <Button
+            android:visibility="gone"
+            android:id="@+id/remove"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/unit"
+            android:text="Remove from Cart"
+            />
 
     </RelativeLayout>
 

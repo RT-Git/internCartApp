@@ -87,6 +87,12 @@ public class MainActivity extends AppCompatActivity
         lottieAnimationView.setAnimation("warning_sign.json");
         lottieAnimationView.loop(true);
         lottieAnimationView.playAnimation();
+        lottieAnimationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getLatest();
+            }
+        });
 //        lottieAnimationView.setVisibility
     }
 

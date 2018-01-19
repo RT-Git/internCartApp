@@ -60,7 +60,7 @@ public class OrdersActivity extends AppCompatActivity {
                         Toast.makeText(OrdersActivity.this,"Response is null", Toast.LENGTH_SHORT).show();
 
                     }
-                } catch (NullPointerException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

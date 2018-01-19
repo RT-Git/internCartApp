@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +19,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.shashank.sony.fancygifdialoglib.FancyGifDialog;
 import com.shashank.sony.fancygifdialoglib.FancyGifDialogListener;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,8 +34,8 @@ import xyz.ravitripathi.interncart.pojo.ProductPOJO;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
-    final AddToCartAPI auth = AddToCartAPI.retrofit.create(AddToCartAPI.class);
-    TextView name, price, brand, unit;
+    TextView name, price, brand;
+    Spinner itemSelect;
     Button b;
     ImageView image;
     String prodID, uid;
@@ -52,9 +57,10 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void bindViews() {
         name = findViewById(R.id.dname);
+        name.setSelected(true);
         price = findViewById(R.id.dprice);
         brand = findViewById(R.id.dbrand);
-        unit = findViewById(R.id.dunit);
+        itemSelect = findViewById(R.id.itemSelect);
         image = findViewById(R.id.dprodImage);
         b = findViewById(R.id.dbuy);
         b.setOnClickListener(new View.OnClickListener() {
@@ -69,8 +75,14 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         //TODO:   NEXT LINE
         uid = "1";
+        String purchaseUnit="1";
         final AddToCartAPI search = AddToCartAPI.retrofit.create(AddToCartAPI.class);
-        Call<CartResponePOJO> call = search.addtoCart(new CartPOJO(uid, prodID));
+        try{
+            purchaseUnit = itemSelect.getSelectedItem().toString();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Call<CartResponePOJO> call = search.addtoCart(new CartPOJO(uid, prodID,purchaseUnit));
         call.enqueue(new Callback<CartResponePOJO>() {
             @Override
             public void onResponse(Call<CartResponePOJO> call, Response<CartResponePOJO> response) {
@@ -128,7 +140,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         name.setText(response.body().getpName());
         price.setText(String.valueOf(response.body().getpPrice()));
         brand.setText(response.body().getpBrand());
-        unit.setText(String.valueOf(response.body().getpUnit()));
+        int u = response.body().getpUnit();
+        String units = String.valueOf(u);
+
 
         RequestOptions options = new RequestOptions()
                 .centerCrop()
@@ -139,6 +153,21 @@ public class ProductDetailActivity extends AppCompatActivity {
                 .load(response.body().getPimage())
                 .apply(options)
                 .into(image);
+
+
+        ArrayList<String> values = new ArrayList<>();
+            for(int i=0; i<u; i++)
+                values.add(""+(i+1));
+
+
+
+        try {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, values);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            itemSelect.setAdapter(adapter);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 

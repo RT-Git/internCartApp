@@ -4,11 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <ImageView
 
         android:id="@+id/dprodImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
         android:layout_centerHorizontal="true"
         android:padding="2dp"
         android:src="@drawable/ic_log_out" />
@@ -19,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/dprodImage"
         android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
         android:text="Name"
         android:textAlignment="center"
@@ -32,7 +35,6 @@
         android:layout_below="@id/dname"
         android:text="Price"
         android:textAlignment="center"
-
         android:textColor="@color/black" />
 
     <TextView
@@ -55,14 +57,40 @@
         android:textAlignment="center"
         android:textColor="@color/black" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dunit">
+
+
+        <TextView
+            android:text="Select number of units to buy"
+            android:layout_width="0dp"
+            android:textColor="@color/black"
+            android:lines="3"
+            android:layout_weight="3"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/itemSelect"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
     <Button
         android:id="@+id/dbuy"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:text="ADD TO CART" />
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="ADD TO CART"
+        android:textColor="@color/white" />
 
 
 </RelativeLayout>
