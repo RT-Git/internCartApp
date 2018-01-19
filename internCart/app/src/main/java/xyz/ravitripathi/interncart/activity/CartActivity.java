@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.shashank.sony.fancygifdialoglib.FancyGifDialog;
+import com.shashank.sony.fancygifdialoglib.FancyGifDialogListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -130,6 +132,21 @@ public class CartActivity extends AppCompatActivity {
                     try {
                         clearCart();
                         Toast.makeText(CartActivity.this, "Checkout done", Toast.LENGTH_SHORT).show();
+                        new FancyGifDialog.Builder(CartActivity.this)
+                                .setTitle("Done!")
+                                .setMessage("Checkout complete!")
+                                .setPositiveBtnBackground("#FF4081")
+                                .setPositiveBtnText("Go back to Home")
+                                .setGifResource(R.drawable.checkout_done)   //Pass your Gif here
+                                .isCancellable(true)
+                                .OnPositiveClicked(new FancyGifDialogListener() {
+                                    @Override
+                                    public void OnClick() {
+                                        CartActivity.this.onBackPressed();
+                                    }
+                                })
+                                .build();
+
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
@@ -155,7 +172,7 @@ public class CartActivity extends AppCompatActivity {
 
     public void clearCart() {
         final ClearCartAPI out = ClearCartAPI.retrofit.create(ClearCartAPI.class);
-        CartPOJO cartPOJO = new CartPOJO(cartContentsResponse.getUserId(),"");
+        CartPOJO cartPOJO = new CartPOJO(cartContentsResponse.getUserId(), "");
         Call<String> call = out.clear(cartPOJO);
         Gson gson = new Gson();
         String json = gson.toJson(cartPOJO);
