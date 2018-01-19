@@ -75,11 +75,15 @@ public class ProductDetailActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     Toast.makeText(ProductDetailActivity.this, "Added to Cart", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(ProductDetailActivity.this,MainActivity.class));
+                    startActivity(new Intent(ProductDetailActivity.this, MainActivity.class));
                 } else {
-                    if (response != null)
+                    if (response != null) {
+
                         Toast.makeText(ProductDetailActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
-                    else
+
+                        if (response.code() == 406)
+                            Toast.makeText(ProductDetailActivity.this, "You already have 4 items!", Toast.LENGTH_SHORT).show();
+                    } else
                         Toast.makeText(ProductDetailActivity.this, "Null response", Toast.LENGTH_SHORT).show();
 
                 }
@@ -129,4 +133,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
 }

@@ -22,10 +22,11 @@
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.ProductDetailActivity" />
+        <activity android:name=".activity.ProductDetailActivity"
+            android:label="Product Details"/>
         <activity android:name=".activity.SignupActivity" />
         <activity android:name=".activity.CartActivity" />
-        <activity android:name=".activity.OrdersActivity"></activity>
+        <activity android:name=".activity.OrdersActivity"/>
     </application>
 
 </manifest>

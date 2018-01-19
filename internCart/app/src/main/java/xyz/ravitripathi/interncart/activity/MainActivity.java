@@ -3,6 +3,7 @@ package xyz.ravitripathi.interncart.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,10 +14,19 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.airbnb.lottie.LottieAnimationView;
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 
 import java.util.List;
 
@@ -25,6 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import xyz.ravitripathi.interncart.R;
 import xyz.ravitripathi.interncart.adapters.ProductRecyclerAdapter;
+import xyz.ravitripathi.interncart.networking.LatestAPI;
 import xyz.ravitripathi.interncart.networking.SearchAPI;
 import xyz.ravitripathi.interncart.pojo.ProductPOJO;
 
@@ -36,13 +47,14 @@ public class MainActivity extends AppCompatActivity
     private SearchView searchView;
     private ProductRecyclerAdapter productRecyclerAdapter;
     private Context c;
-
+    private SliderLayout carouselView;
+    private LottieAnimationView lottieAnimationView;
+    private RelativeLayout content;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent i = getIntent();
-
         c = this;
         String uid = i.getStringExtra("uid");
 //        if(uid==null || uid.isEmpty()){
@@ -50,14 +62,44 @@ public class MainActivity extends AppCompatActivity
 //            startActivity(new Intent(this,LoginActivity.class));
 //        }
         bindViews();
+        getLatest();
 
     }
+
+
+    private void setContent(){
+        lottieAnimationView.setVisibility(View.GONE);
+        content.setVisibility(View.VISIBLE);
+
+    }
+
+    private void setLoading() {
+        lottieAnimationView.setVisibility(View.VISIBLE);
+        content.setVisibility(View.GONE);
+        lottieAnimationView.setAnimation("loading_animation.json");
+        lottieAnimationView.loop(true);
+        lottieAnimationView.playAnimation();
+     }
+
+    private void setError(){
+        lottieAnimationView.setVisibility(View.VISIBLE);
+        content.setVisibility(View.GONE);
+        lottieAnimationView.setAnimation("warning_sign.json");
+        lottieAnimationView.loop(true);
+        lottieAnimationView.playAnimation();
+//        lottieAnimationView.setVisibility
+    }
+
 
     private void bindViews() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(c, 2));
+        recyclerView.setNestedScrollingEnabled(false);
+        lottieAnimationView = findViewById(R.id.loading_view);
+        carouselView = findViewById(R.id.carousal);
+        content = findViewById(R.id.content);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -68,40 +110,52 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        searchView = findViewById(R.id.search);
-
-
-//        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-//            @Override
-//            public boolean onClose() {
-//                recyclerView.setAdapter(null);
-//
-//                return false;
-//            }
-//        });
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                String s = searchView.getQuery().toString();
-//
-//                searchForItem(s);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//
-//                String s = searchView.getQuery().toString();
-//
-//                searchForItem(s);
-//
-//                return false;
-//            }
-//
-//        });
-
     }
 
+
+    private void getLatest() {
+        Toast.makeText(MainActivity.this, "Call Made", Toast.LENGTH_SHORT).show();
+        setLoading();
+        final LatestAPI latestAPI = LatestAPI.retrofit.create(LatestAPI.class);
+        Call<List<ProductPOJO>> call = latestAPI.latest();
+        call.enqueue(new Callback<List<ProductPOJO>>() {
+            @Override
+            public void onResponse(Call<List<ProductPOJO>> call, Response<List<ProductPOJO>> response) {
+                setContent();
+                Toast.makeText(MainActivity.this, "Response Recieved", Toast.LENGTH_SHORT).show();
+
+                Log.d("Body", response.body().get(0).getPimage());
+
+
+                for (int i = 0; i < 4; i++) {
+                    TextSliderView textSliderView = new TextSliderView(MainActivity.this);
+                    // initialize a SliderLayout
+                    textSliderView
+                            .description(response.body().get(i).getpName())
+                            .image(response.body().get(i).getPimage())
+                            .setScaleType(BaseSliderView.ScaleType.Fit);
+                    //add your extra information
+
+                    carouselView.addSlider(textSliderView);
+                }
+                carouselView.setPresetTransformer(SliderLayout.Transformer.Accordion);
+                carouselView.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+                carouselView.setCustomAnimation(new DescriptionAnimation());
+                carouselView.setDuration(4000);
+
+                productRecyclerAdapter = new ProductRecyclerAdapter(MainActivity.this, response.body());
+                recyclerView.setAdapter(productRecyclerAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductPOJO>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "failed", Toast.LENGTH_SHORT).show();
+                setError();
+                t.printStackTrace();
+            }
+        });
+    }
 
     private void searchForItem(String s) {
         final SearchAPI search = SearchAPI.retrofit.create(SearchAPI.class);
@@ -113,6 +167,7 @@ public class MainActivity extends AppCompatActivity
                     if (!response.body().isEmpty()) {
                         productRecyclerAdapter = new ProductRecyclerAdapter(MainActivity.this, response.body());
                         recyclerView.setAdapter(productRecyclerAdapter);
+                        carouselView.setVisibility(View.GONE);
                     } else {
 
                     }
@@ -124,6 +179,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<List<ProductPOJO>> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "FAILED", Toast.LENGTH_SHORT).show();
+                setError();
                 Log.d("RESULT", "FAILED");
             }
         });
@@ -152,6 +208,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onClose() {
                 recyclerView.setAdapter(null);
+                recyclerView.setVisibility(View.GONE);
+                carouselView.setVisibility(View.VISIBLE);
                 return false;
             }
         });
@@ -182,6 +240,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 recyclerView.setAdapter(null);
+                carouselView.setVisibility(View.VISIBLE);
+                getLatest();
                 return true; // Return true to collapse action view
             }
 

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">internCart</string>
     <string name="backend_url">htpp:sdlksldlk</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">InternCart</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
