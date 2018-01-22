@@ -1,6 +1,5 @@
 package xyz.ravitripathi.interncart.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,9 +44,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_detail);
         Intent i = getIntent();
         prodID = i.getStringExtra("id");
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        uid = sharedPref.getString("uid","081d9d09-421a-498b-8d27-a1892bd2bcb2");
-
+        SharedPreferences sharedPref = getApplicationContext()
+                .getSharedPreferences("shared", 0);
+        uid = sharedPref.getString("uid", "0");
         bindViews();
         if (prodID != null) {
             getItemDetails(prodID);
@@ -66,7 +64,13 @@ public class ProductDetailActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addToCart(prodID, uid);
+                if (uid.equals("0")) {
+                    Toast.makeText(ProductDetailActivity.this, "Please Login to continue", Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(ProductDetailActivity.this, LoginActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(i);
+                } else
+                    addToCart(prodID, uid);
             }
         });
     }
@@ -75,14 +79,14 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         //TODO:   NEXT LINE
         //uid = "1";
-        String purchaseUnit="1";
+        String purchaseUnit = "1";
         final AddToCartAPI search = AddToCartAPI.retrofit.create(AddToCartAPI.class);
-        try{
+        try {
             purchaseUnit = itemSelect.getSelectedItem().toString();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        Call<CartResponePOJO> call = search.addtoCart(new CartPOJO(uid, prodID,purchaseUnit));
+        Call<CartResponePOJO> call = search.addtoCart(new CartPOJO(uid, prodID, purchaseUnit));
         call.enqueue(new Callback<CartResponePOJO>() {
             @Override
             public void onResponse(Call<CartResponePOJO> call, Response<CartResponePOJO> response) {
@@ -156,16 +160,15 @@ public class ProductDetailActivity extends AppCompatActivity {
 
 
         ArrayList<String> values = new ArrayList<>();
-            for(int i=0; i<u; i++)
-                values.add(""+(i+1));
-
+        for (int i = 0; i < u; i++)
+            values.add("" + (i + 1));
 
 
         try {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, values);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             itemSelect.setAdapter(adapter);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

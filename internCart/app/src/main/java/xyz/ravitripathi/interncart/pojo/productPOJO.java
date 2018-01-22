@@ -13,22 +13,22 @@ public class ProductPOJO {
     @SerializedName("productId")
     @Expose
     private String productId;
-    @SerializedName("pName")
+    @SerializedName("productName")
     @Expose
     private String pName;
-    @SerializedName("pPrice")
+    @SerializedName("productPrice")
     @Expose
     private double pPrice;
-    @SerializedName("pBrand")
+    @SerializedName("productBrand")
     @Expose
     private String pBrand;
-    @SerializedName("pCategory")
+    @SerializedName("productCategory")
     @Expose
     private String pCategory;
-    @SerializedName("pimage")
+    @SerializedName("productImage")
     @Expose
     private String pimage;
-    @SerializedName("pUnit")
+    @SerializedName("productUnit")
     @Expose
     private int pUnit;
 

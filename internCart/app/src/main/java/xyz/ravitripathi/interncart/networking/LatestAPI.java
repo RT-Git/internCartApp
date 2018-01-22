@@ -9,6 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import xyz.ravitripathi.interncart.pojo.ProductPOJO;
 
+import static xyz.ravitripathi.interncart.Constants.catalogue;
 import static xyz.ravitripathi.interncart.Constants.search_url;
 
 /**
@@ -18,10 +19,10 @@ import static xyz.ravitripathi.interncart.Constants.search_url;
 public interface LatestAPI {
 
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(search_url)
+            .baseUrl(catalogue)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-    @GET("/search/latest")
+    @GET("/catalogue/latest")
     Call<List<ProductPOJO>> latest();
 }

@@ -14,10 +14,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import info.hoang8f.widget.FButton;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,7 +32,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText username, password;
     private RelativeLayout container;
-    private Button button, signup;
+    private Button signup, button;
+    private TextView skip;
     private Context c = this;
     private LottieAnimationView animationView;
 
@@ -69,6 +72,18 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         container = findViewById(R.id.container);
         signup = findViewById(R.id.signup);
+        skip = findViewById(R.id.skip);
+
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                i.putExtra("uid", "guest");
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(i);
+            }
+        });
+
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

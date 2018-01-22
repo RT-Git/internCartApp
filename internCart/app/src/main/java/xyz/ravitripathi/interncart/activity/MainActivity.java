@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private RecyclerView recyclerView;
+    private boolean isGuest = false;
     private SearchView searchView;
     private ProductRecyclerAdapter productRecyclerAdapter;
     private Context c;
@@ -57,6 +58,10 @@ public class MainActivity extends AppCompatActivity
         Intent i = getIntent();
         c = this;
 
+        String val = i.getStringExtra("uid");
+        if (val.equals("guest")) {
+            isGuest = true;
+        }
         SharedPreferences sharedPref = getApplicationContext()
                 .getSharedPreferences("shared", 0);
         String uidFromStorage = sharedPref.getString("uid", "0");
@@ -102,27 +107,32 @@ public class MainActivity extends AppCompatActivity
                 setContent();
                 Toast.makeText(MainActivity.this, "Response Recieved", Toast.LENGTH_SHORT).show();
 
-                Log.d("Body", response.body().get(0).getPimage());
+                try {
+                    Log.d("Body", response.body().get(0).getPimage());
 
 
-                for (int i = 0; i < 4; i++) {
-                    TextSliderView textSliderView = new TextSliderView(MainActivity.this);
-                    // initialize a SliderLayout
-                    textSliderView
-                            .description(response.body().get(i).getpName())
-                            .image(response.body().get(i).getPimage())
-                            .setScaleType(BaseSliderView.ScaleType.Fit);
-                    //add your extra information
+                    for (int i = 0; i < 4; i++) {
+                        TextSliderView textSliderView = new TextSliderView(MainActivity.this);
+                        // initialize a SliderLayout
+                        textSliderView
+                                .description(response.body().get(i).getpName())
+                                .image(response.body().get(i).getPimage())
+                                .setScaleType(BaseSliderView.ScaleType.Fit);
+                        //add your extra information
 
-                    carouselView.addSlider(textSliderView);
+                        carouselView.addSlider(textSliderView);
+                    }
+                    carouselView.setPresetTransformer(SliderLayout.Transformer.Accordion);
+                    carouselView.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+                    carouselView.setCustomAnimation(new DescriptionAnimation());
+                    carouselView.setDuration(4000);
+
+                    productRecyclerAdapter = new ProductRecyclerAdapter(MainActivity.this, response.body());
+                    recyclerView.setAdapter(productRecyclerAdapter);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    setError();
                 }
-                carouselView.setPresetTransformer(SliderLayout.Transformer.Accordion);
-                carouselView.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-                carouselView.setCustomAnimation(new DescriptionAnimation());
-                carouselView.setDuration(4000);
-
-                productRecyclerAdapter = new ProductRecyclerAdapter(MainActivity.this, response.body());
-                recyclerView.setAdapter(productRecyclerAdapter);
 
             }
 
@@ -242,16 +252,26 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.cart) {
-            startActivity(new Intent(this, CartActivity.class));
-        } else if (id == R.id.orders) {
-            startActivity(new Intent(this, OrdersActivity.class));
-        } else if (id == R.id.nav_logout) {
-            logOut();
+        if (isGuest) {
+            Toast.makeText(this, "Please Login to continue", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(this,LoginActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(i);
+        } else {
+            if (id == R.id.cart) {
+                startActivity(new Intent(this, CartActivity.class));
+            } else if (id == R.id.orders) {
+                startActivity(new Intent(this, OrdersActivity.class));
+            } else if (id == R.id.nav_logout) {
+                logOut();
+            }
         }
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

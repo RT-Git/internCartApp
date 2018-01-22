@@ -1,84 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="#3F51B5"
     tools:context="xyz.ravitripathi.interncart.activity.LoginActivity">
 
-    <!--<com.airbnb.lottie.LottieAnimationView-->
-    <!--android:layout_width="match_parent"-->
-    <!--app:lottie_fileName="map_animation.json"-->
-    <!--app:lottie_autoPlay="true"-->
-    <!--android:scaleType="centerCrop"-->
-    <!--app:lottie_loop="true"-->
-    <!--android:layout_height="match_parent" />-->
 
-
-    <RelativeLayout
-        android:id="@+id/container"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="20dp">
+        android:layout_height="wrap_content">
 
-
-        <EditText
-            android:id="@+id/userName"
+        <RelativeLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:hint="Enter Username"
-            android:textColor="@color/white"
-            android:textColorHint="@color/offwhite" />
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/userName"
-            android:hint="Enter Password"
-            android:inputType="textPassword"
-            android:textColor="@color/white"
-            android:textColorHint="@color/offwhite" />
-
-        <Button
-            android:id="@+id/login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/password"
-            android:text="Login" />
+            android:layout_height="match_parent"
+            android:padding="20dp">
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:id="@+id/blank"
-            android:layout_below="@id/login"
-            android:layout_marginTop="35dp"
-            android:background="@color/white" />
+            <ImageView
+                android:id="@+id/appIcon"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="40dp"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/appIcon"
+                android:paddingTop="25sp"
+                android:text="internCart"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_below="@id/blank"
-            android:layout_marginTop="10dp"
-            android:id="@+id/some"
-            android:textAlignment="center"
-            android:text="Not a member?"
-            android:textColor="@color/white"
-            android:layout_height="wrap_content" />
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/usernameWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/appIcon"
+                android:layout_marginTop="100dp"
+                android:textColorHint="@color/offwhite">
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/some"
-            android:id="@+id/signup"
-            android:text="Sign Up here!"
 
-            />
-    </RelativeLayout>
+                <EditText
+                    android:id="@+id/userName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Username"
+                    android:textColor="@color/white" />
 
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@id/usernameWrapper"
+                android:textColorHint="@color/offwhite">
+
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/white" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <!--<info.hoang8f.widget.FButton-->
+                <!--android:id="@+id/login"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@id/passwordWrapper"-->
+                <!--android:text="Login"-->
+                <!--android:textColor="@color/white"-->
+                <!--fbutton:buttonColor="@color/fbutton_color_alizarin"-->
+                <!--fbutton:cornerRadius="5dp"-->
+                <!--fbutton:shadowColor="@color/fbutton_color_pomegranate"-->
+                <!--fbutton:shadowEnabled="true"-->
+                <!--fbutton:shadowHeight="5dp" />-->
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:text="Login"
+                android:textColor="@color/white"
+                android:elevation="30dp"
+                android:backgroundTint="@color/fbutton_color_emerald"
+                android:layout_below="@id/passwordWrapper"
+                android:shadowColor="@color/fbutton_color_turquoise"
+                android:id="@+id/login"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:id="@+id/blank"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/login"
+                android:layout_marginTop="35dp"
+                android:background="@color/white" />
+
+
+            <TextView
+                android:id="@+id/some"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/blank"
+                android:layout_marginTop="10dp"
+                android:text="Not a member?"
+                android:textAlignment="center"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/signup"
+                android:textColor="@color/white"
+                android:elevation="30dp"
+                android:backgroundTint="@color/fbutton_color_orange"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/some"
+                android:text="Sign Up here!"
+
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Skip>>"
+                android:id="@+id/skip"
+                android:paddingTop="10dp"
+                android:layout_below="@id/signup"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
+    </ScrollView>
 
 
     <com.airbnb.lottie.LottieAnimationView
