@@ -47,10 +47,11 @@ public class CartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
         c = this;
         bindViews();
+
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        String defaultValue = null;
-        userID = sharedPref.getString("uid", defaultValue);
-        fetchCart("1");
+
+        userID = sharedPref.getString("uid","081d9d09-421a-498b-8d27-a1892bd2bcb2");
+        fetchCart(userID);
     }
 
     private void bindViews() {
@@ -115,7 +116,7 @@ public class CartActivity extends AppCompatActivity {
         Map<String, ProductInfoPOJO> productInfoPOJOMap = new HashMap<>();
 
         for (ProductPOJO i : cartContentsResponse.getProductDTOList()) {
-            ProductInfoPOJO p = new ProductInfoPOJO("1", String.valueOf(i.getpPrice()));
+            ProductInfoPOJO p = new ProductInfoPOJO(String.valueOf(i.getpUnit()), String.valueOf(i.getpPrice()));
             productInfoPOJOMap.put(i.getProductId(), p);
         }
 

@@ -32,10 +32,11 @@ public class OrdersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_orders);
         c = this;
         bindViews();
+
+
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        String defaultValue = null;
-        userID = sharedPref.getString("uid", defaultValue);
-        fetchCart("4e6c7a99-a14a-407f-a7b9-cddfbd6190f9");
+        String userID = sharedPref.getString("uid","081d9d09-421a-498b-8d27-a1892bd2bcb2");
+        fetchCart(userID);
     }
 
     private void bindViews() {

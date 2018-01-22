@@ -47,8 +47,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         Intent i = getIntent();
         prodID = i.getStringExtra("id");
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        String defaultValue = null;
-        uid = sharedPref.getString("uid", defaultValue);
+        uid = sharedPref.getString("uid","081d9d09-421a-498b-8d27-a1892bd2bcb2");
+
         bindViews();
         if (prodID != null) {
             getItemDetails(prodID);
@@ -74,7 +74,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void addToCart(String prodID, String uid) {
 
         //TODO:   NEXT LINE
-        uid = "1";
+        //uid = "1";
         String purchaseUnit="1";
         final AddToCartAPI search = AddToCartAPI.retrofit.create(AddToCartAPI.class);
         try{

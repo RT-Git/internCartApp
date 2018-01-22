@@ -3,7 +3,6 @@ package xyz.ravitripathi.interncart.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,7 +13,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,50 +48,24 @@ public class MainActivity extends AppCompatActivity
     private SliderLayout carouselView;
     private LottieAnimationView lottieAnimationView;
     private RelativeLayout content;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent i = getIntent();
         c = this;
-        String uid = i.getStringExtra("uid");
-//        if(uid==null || uid.isEmpty()){
-//            Toast.makeText(this,"Please Login First to continue",Toast.LENGTH_SHORT);
-//            startActivity(new Intent(this,LoginActivity.class));
-//        }
+
+        SharedPreferences sharedPref = getApplicationContext()
+                .getSharedPreferences("shared", 0);
+        String uidFromStorage = sharedPref.getString("uid", "0");
+        Log.e("INTERNAL", uidFromStorage);
+        Toast.makeText(this, uidFromStorage, Toast.LENGTH_SHORT).show();
+
         bindViews();
         getLatest();
 
-    }
-
-
-    private void setContent(){
-        lottieAnimationView.setVisibility(View.GONE);
-        content.setVisibility(View.VISIBLE);
-
-    }
-
-    private void setLoading() {
-        lottieAnimationView.setVisibility(View.VISIBLE);
-        content.setVisibility(View.GONE);
-        lottieAnimationView.setAnimation("loading_animation.json");
-        lottieAnimationView.loop(true);
-        lottieAnimationView.playAnimation();
-     }
-
-    private void setError(){
-        lottieAnimationView.setVisibility(View.VISIBLE);
-        content.setVisibility(View.GONE);
-        lottieAnimationView.setAnimation("warning_sign.json");
-        lottieAnimationView.loop(true);
-        lottieAnimationView.playAnimation();
-        lottieAnimationView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getLatest();
-            }
-        });
-//        lottieAnimationView.setVisibility
     }
 
 
@@ -263,16 +235,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -297,11 +260,43 @@ public class MainActivity extends AppCompatActivity
 
     private void logOut() {
         Intent i = new Intent(this, LoginActivity.class);
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getApplicationContext()
+                .getSharedPreferences("shared", 0);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("uid", null);
+        editor.clear();
         editor.commit();
+
+
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(i);
     }
+
+    private void setContent() {
+        lottieAnimationView.setVisibility(View.GONE);
+        content.setVisibility(View.VISIBLE);
+
+    }
+
+    private void setLoading() {
+        lottieAnimationView.setVisibility(View.VISIBLE);
+        content.setVisibility(View.GONE);
+        lottieAnimationView.setAnimation("loading_animation.json");
+        lottieAnimationView.loop(true);
+        lottieAnimationView.playAnimation();
+    }
+
+    private void setError() {
+        lottieAnimationView.setVisibility(View.VISIBLE);
+        content.setVisibility(View.GONE);
+        lottieAnimationView.setAnimation("warning_sign.json");
+        lottieAnimationView.loop(true);
+        lottieAnimationView.playAnimation();
+        lottieAnimationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getLatest();
+            }
+        });
+    }
+
 }

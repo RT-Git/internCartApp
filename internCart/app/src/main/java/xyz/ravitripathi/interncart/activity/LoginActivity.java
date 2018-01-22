@@ -15,18 +15,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xyz.ravitripathi.interncart.pojo.AuthPOJO;
-import xyz.ravitripathi.interncart.pojo.AuthResponse;
 import xyz.ravitripathi.interncart.R;
 import xyz.ravitripathi.interncart.networking.AuthAPI;
+import xyz.ravitripathi.interncart.pojo.AuthPOJO;
+import xyz.ravitripathi.interncart.pojo.AuthResponse;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,33 +39,25 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        String defaultValue = null;
-        String uid = sharedPref.getString("uid", defaultValue);
 
         getSupportActionBar().hide();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
-  //TODO: Remove this and implement lower
-        Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("uid", uid);
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        finish();
-        startActivity(i);
 
+        SharedPreferences sharedPref = getApplicationContext()
+                .getSharedPreferences("shared", 0);
+        String uidFromStorage = sharedPref.getString("uid", null);
+        if (uidFromStorage != null) {
+            Log.d("uidLogin",uidFromStorage);
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            i.putExtra("uid", uidFromStorage);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(i);
+        }else
+            Log.d("uidLogin","null value");
 
-        /*
-        if (uid != null) {
-            if(!uid.isEmpty()) {
-                Intent i = new Intent(this, MainActivity.class);
-                i.putExtra("uid", uid);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(i);
-            }
-        }
-        */
         bindViews();
 
     }
@@ -82,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this,SignupActivity.class));
+                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
             }
         });
         button.setOnClickListener(new View.OnClickListener() {
@@ -131,14 +121,17 @@ public class LoginActivity extends AppCompatActivity {
                 animationView.setVisibility(View.GONE);
 
                 if (response.isSuccessful()) {
-                    Log.e("Success",String.valueOf(response.code()));
+                    Log.e("Success", String.valueOf(response.code()));
                     try {
-                        Toast.makeText(LoginActivity.this, response.body().getUid(), Toast.LENGTH_SHORT).show();
-                        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                        String resp = response.body().getUid();
+                        Toast.makeText(LoginActivity.this, resp, Toast.LENGTH_SHORT).show();
+                        SharedPreferences sharedPref = getApplicationContext()
+                                .getSharedPreferences("shared", 0);
                         SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putString("uid", response.body().getUid());
+                        editor.putString("uid", resp);
                         editor.commit();
-                        Intent i = new Intent(LoginActivity.this,MainActivity.class);
+                        Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                        i.putExtra("uid", response.body().getUid());
                         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(i);
                     } catch (NullPointerException e) {
@@ -146,10 +139,10 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 } else {
                     if (response.code() == 401) {
-                        Log.e("Not success",String.valueOf(response.code()));
+                        Log.e("Not success", String.valueOf(response.code()));
                         Toast.makeText(LoginActivity.this, "Sorry, this user does not exits", Toast.LENGTH_SHORT).show();
-                    } else{
-                        Log.e("Not success",String.valueOf(response.code()));
+                    } else {
+                        Log.e("Not success", String.valueOf(response.code()));
                         Toast.makeText(LoginActivity.this, "response in not successful", Toast.LENGTH_SHORT).show();
                     }
 
@@ -158,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AuthResponse> call, Throwable t) {
-                Log.e("FAIL","FAIL");
+                Log.e("FAIL", "FAIL");
                 container.setVisibility(View.VISIBLE);
                 animationView.setVisibility(View.GONE);
                 Toast.makeText(LoginActivity.this, "Call Failure", Toast.LENGTH_SHORT);

@@ -74,13 +74,13 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
             price.setText(String.valueOf(data.getpPrice()));
             brand.setText(data.getpBrand());
 
-//            if (context instanceof MainActivity) {
-//                unit.setText("Available Units : ".concat(String.valueOf(data.getpUnit())));
+            if (context instanceof MainActivity) {
+                unit.setText("Available Units : ".concat(String.valueOf(data.getpUnit())));
 //                removeItem.setVisibility(View.GONE);
-//            } else {
-//                unit.setText("Added Items: ".concat(String.valueOf(data.getpUnit())));
+            } else {
+                unit.setText("Added Items: ".concat(String.valueOf(data.getpUnit())));
 //                removeItem.setVisibility(View.VISIBLE);
-//            }
+            }
 
             RequestOptions options = new RequestOptions()
                     .centerCrop()
