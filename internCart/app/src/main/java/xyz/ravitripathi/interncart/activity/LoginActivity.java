@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Sorry, this user does not exits", Toast.LENGTH_SHORT).show();
                     } else {
                         Log.e("Not success", String.valueOf(response.code()));
-                        Toast.makeText(LoginActivity.this, "response in not successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this,  String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -169,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("FAIL", "FAIL");
                 container.setVisibility(View.VISIBLE);
                 animationView.setVisibility(View.GONE);
-                Toast.makeText(LoginActivity.this, "Call Failure", Toast.LENGTH_SHORT);
+                Toast.makeText(LoginActivity.this, "Server issues. Use as guest instead", Toast.LENGTH_SHORT);
             }
         });
     }

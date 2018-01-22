@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         c = this;
 
         String val = i.getStringExtra("uid");
-        if (val.equals("guest")) {
+        if ("guest".equals(val)) {
             isGuest = true;
         }
         SharedPreferences sharedPref = getApplicationContext()

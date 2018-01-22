@@ -24,10 +24,8 @@ import retrofit2.Response;
 import xyz.ravitripathi.interncart.R;
 import xyz.ravitripathi.interncart.adapters.ProductRecyclerAdapter;
 import xyz.ravitripathi.interncart.networking.CheckoutAPI;
-import xyz.ravitripathi.interncart.networking.ClearCartAPI;
 import xyz.ravitripathi.interncart.networking.GetCartAPI;
 import xyz.ravitripathi.interncart.pojo.CartContentsResponse;
-import xyz.ravitripathi.interncart.pojo.CartPOJO;
 import xyz.ravitripathi.interncart.pojo.OrderPOJO;
 import xyz.ravitripathi.interncart.pojo.PlaceOrderPOJO;
 import xyz.ravitripathi.interncart.pojo.ProductInfoPOJO;
@@ -47,11 +45,13 @@ public class CartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
         c = this;
         bindViews();
+        SharedPreferences sharedPref = getApplicationContext()
+                .getSharedPreferences("shared", 0);
+        String uidFromStorage = sharedPref.getString("uid", "0");
+        if ("0".equals(uidFromStorage)) {
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-
-        userID = sharedPref.getString("uid","081d9d09-421a-498b-8d27-a1892bd2bcb2");
-        fetchCart(userID);
+        } else
+            fetchCart(uidFromStorage);
     }
 
     private void bindViews() {
@@ -61,6 +61,7 @@ public class CartActivity extends AppCompatActivity {
 
 
     private void fetchCart(String uid) {
+        Toast.makeText(this,uid,Toast.LENGTH_SHORT).show();
         final GetCartAPI search = GetCartAPI.retrofit.create(GetCartAPI.class);
         Call<CartContentsResponse> call = search.getUserCart(uid);
         call.enqueue(new Callback<CartContentsResponse>() {

@@ -19,8 +19,7 @@ public interface GetCartAPI {
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-    @GET("/cart/getByUid/{uid}")
-    Call<CartContentsResponse> getUserCart(@Path("uid") String uid);
-
+    @GET("/cart/getByUid/{userId}")
+    Call<CartContentsResponse> getUserCart(@Path("userId") String uid);
 
 }
